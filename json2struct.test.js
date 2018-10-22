@@ -2,9 +2,10 @@ const json2struct = require('./json2struct');
 
 test('empty string should produce empty struct', () => {
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {}
+        rootDocument: {
+            type: 'object',
+            properties: {}
+        }
     }
     expect(json2struct('')).toEqual(output);
 })
@@ -12,13 +13,13 @@ test('empty string should produce empty struct', () => {
 test('alphanumeric property should produce string type struct', () => {
     const input = '{"foo": "bar"}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'string',
-                value: 'bar'
+        rootDocument: {
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'string',
+                    value: 'bar'
+                }
             }
         }
     }
@@ -28,13 +29,13 @@ test('alphanumeric property should produce string type struct', () => {
 test('numeric property should produce number type struct', () => {
     const input = '{"foo": 42}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'number',
-                value: 42
+        rootDocument: {
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'number',
+                    value: 42
+                }
             }
         }
     }
@@ -44,16 +45,16 @@ test('numeric property should produce number type struct', () => {
 test('array property should produce array type struct', () => {
     const input = '{"foo": [1,2,3]}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'array',
-                items: {
-                    name: 'fooItem',
-                    type: 'number',
-                    value: 1
+        rootDocument: {
+
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'array',
+                    items: {
+                        type: 'number',
+                        value: 1
+                    }
                 }
             }
         }
@@ -64,16 +65,16 @@ test('array property should produce array type struct', () => {
 test('empty array property', () => {
     const input = '{"foo": []}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'array',
-                items: {
-                    name: 'fooItem',
-                    type: 'undefined',
-                    value: undefined
+        rootDocument: {
+
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'array',
+                    items: {
+                        type: 'undefined',
+                        value: undefined
+                    }
                 }
             }
         }
@@ -84,20 +85,18 @@ test('empty array property', () => {
 test('array of object should include object description', () => {
     const input = '{"foo": [{"bar": 42}]}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'array',
-                items: {
-                    name: 'fooItem',
-                    type: 'object',
-                    properties: {
-                        bar: {
-                            name: 'bar',
-                            type: 'number',
-                            value: 42
+        rootDocument: {
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            bar: {
+                                type: 'number',
+                                value: 42
+                            }
                         }
                     }
                 }
@@ -110,17 +109,16 @@ test('array of object should include object description', () => {
 test('object property should produce object type struct', () => {
     const input = '{"foo": {"bar": "foobar"}}';
     const output = {
-        name: 'rootDocument',
-        type: 'object',
-        properties: {
-            foo: {
-                name: 'foo',
-                type: 'object',
-                properties: {
-                    bar: {
-                        name: 'bar',
-                        type: 'string',
-                        value: 'foobar'
+        rootDocument: {
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'object',
+                    properties: {
+                        bar: {
+                            type: 'string',
+                            value: 'foobar'
+                        }
                     }
                 }
             }

@@ -1,6 +1,9 @@
 function json2struct(jsonstring) {
     jsonstring = jsonstring || '{}';
-    return traverse(JSON.parse(jsonstring));
+    const result = {
+        rootDocument: traverse(JSON.parse(jsonstring))
+    };
+    return result;
 }
 
 function inferType(val) {
@@ -12,47 +15,45 @@ function inferType(val) {
     return type;
 }
 
-function traverse(val, key) {
+function traverse(val) {
 
-    key = key || 'rootDocument'
-    const type = inferType(val)
-    const handler = handlers[type] || handlers['primitive']
+    const type = inferType(val);
+    const handler = handlers[type] || handlers['primitive'];
+    const res = handler(type, val);
 
-    return handler(key, type, val);
+    return res;
 }
 
 const handlers = {
-    object: handleObject,
+    primitive: handlePrimitive,
     array: handleArray,
-    primitive: handlePrimitive
+    object: handleObject
 }
 
-function handlePrimitive(key, type, val) {
-    return {
-        name: key,
+function handlePrimitive(type, val) {
+    const result = {
         type: type,
         value: val
     };
+
+    return result;
 }
 
-function handleArray(key, type, val) {
+function handleArray(type, val) {
     const result = {
-        name: key,
         type: type,
-        items: traverse(val[0], `${key}Item`)
+        items: traverse(val[0])
     };
     return result;
 }
 
-function handleObject(key, type, val) {
+function handleObject(type, val) {
     const result = {
-        name: key,
         type: type,
         properties: {}
     };
-    for (let k in val) {
-        const v = val[k];
-        result.properties[k] = traverse(v, k);
+    for (let key in val) {
+        result.properties[key] = traverse(val[key]);
     }
     return result;
 }
